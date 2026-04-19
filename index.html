@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Calculator</title>
+    <!-- Use Inter for that clean Vercel/Linear look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Lucide Icons (cleaner, sharper than Phosphor for minimalist design) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+
+    <!-- Minimalist Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo" style="display: flex; align-items: center;">
+                <span style="margin-right: 12px; font-weight: 700;"></span>
+                <!-- Workspace Selector -->
+                <div class="custom-dropdown" id="workspace-dropdown" style="min-width: 140px;">
+                    <div class="dropdown-trigger"
+                        style="padding: 4px 10px; font-size: 12px; border-radius: 8px; border: none; background: transparent; box-shadow: none;"
+                        id="workspace-trigger">
+                        Loading... <i data-lucide="chevron-down"
+                            style="width: 14px; height: 14px; margin-left: 4px;"></i>
+                    </div>
+                    <div class="dropdown-menu" id="workspace-menu" style="font-weight: 400;"></div>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-tab="tab-kalkulator">Recipes</button>
+                <button class="tab-btn" data-tab="tab-master">Database</button>
+            </div>
+            <div class="nav-actions">
+                <!-- Select product seamlessly in the nav -->
+                <div class="custom-dropdown" id="product-dropdown" style="min-width: 210px;">
+                    <div class="dropdown-trigger" id="product-trigger">Loading... <i data-lucide="chevron-down"></i>
+                    </div>
+                    <div class="dropdown-menu" id="product-menu"></div>
+                </div>
+                <button onclick="createNewProduct()" class="icon-btn" title="New Recipe"><i
+                        data-lucide="plus"></i></button>
+                <button onclick="deleteCurrentProduct()" class="icon-btn danger-hover" title="Delete Recipe"><i
+                        data-lucide="trash-2"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <!-- ================= RECIPE TAB ================= -->
+        <section id="tab-kalkulator" class="tab-content active">
+
+            <header class="page-header">
+                <input type="text" id="recipe-name" class="huge-title-input" placeholder="Untitled Recipe..." value="">
+            </header>
+
+            <div class="layout-grid">
+
+                <!-- Main Area: BOM Table -->
+                <div class="main-col">
+                    <div class="section-title">
+                        <h3>Bill of Materials</h3>
+                        <button onclick="clearRecipe()" class="text-link danger">Clear List</button>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="sleek-table">
+                            <thead>
+                                <tr>
+                                    <th>Ingredient</th>
+                                    <th class="right">Master Vol</th>
+                                    <th>Recipe Qty</th>
+                                    <th>Unit</th>
+                                    <th class="right">Base Cost</th>
+                                    <th class="right">Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="recipe-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button onclick="addRecipeRow()" class="add-row-btn">
+                        <i data-lucide="plus"></i> Add Ingredient
+                    </button>
+                </div>
+
+                <!-- Sidebar: Parameters & Summary -->
+                <div class="side-col">
+
+                    <div class="summary-box">
+                        <div class="summary-header">Summary</div>
+
+                        <!-- Params -->
+                        <div class="param-row">
+                            <label>Profit Margin (%)</label>
+                            <input type="number" id="calc-profit-pct" step="any" class="sleek-input num">
+                        </div>
+                        <div class="param-row">
+                            <label>Operations (%)</label>
+                            <input type="number" id="calc-ops-pct" step="any" class="sleek-input num">
+                        </div>
+                        <div class="param-row">
+                            <label>Tax (%)</label>
+                            <input type="number" id="calc-tax-pct" step="any" class="sleek-input num">
+                        </div>
+
+                        <hr class="divider">
+
+                        <!-- Breakdown -->
+                        <div class="breakdown-row">
+                            <span>Base Material Cost</span>
+                            <strong id="sum-modal">Rp 0</strong>
+                        </div>
+                        <div class="breakdown-row faded">
+                            <span>Profit (<span id="lbl-profit">50</span>%)</span>
+                            <span id="sum-profit">Rp 0</span>
+                        </div>
+                        <div class="breakdown-row faded">
+                            <span>Operations (<span id="lbl-ops">30</span>%)</span>
+                            <span id="sum-ops">Rp 0</span>
+                        </div>
+                        <div class="breakdown-row faded">
+                            <span>Tax (<span id="lbl-tax">10</span>%)</span>
+                            <span id="sum-tax">Rp 0</span>
+                        </div>
+
+                        <hr class="divider">
+
+                        <div class="breakdown-row large">
+                            <span>Total Cost</span>
+                            <strong id="sum-grand">Rp 0</strong>
+                        </div>
+
+                        <div class="final-price-box">
+                            <div class="label">Recommended Selling Price</div>
+                            <div class="value" id="sum-recommendation">Rp 0</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= MASTER TAB ================= -->
+        <section id="tab-master" class="tab-content">
+            <header class="page-header layout-grid" style="align-items: center; margin-bottom: 32px;">
+                <h1 class="huge-title" style="margin: 0;">Master Database</h1>
+                <div
+                    style="display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.03); padding: 8px 12px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); white-space: nowrap; overflow-x: auto;">
+                    <button onclick="promptEditWorkspaceName()" class="glass-btn subtle"
+                        style="padding: 6px 14px; font-size: 13px; width: auto; display: flex; align-items: center; height: 34px;"><i
+                            data-lucide="pencil" style="width:14px;height:14px;margin-right:6px;"></i>Rename</button>
+                    <button onclick="createNewWorkspace()" class="glass-btn subtle"
+                        style="padding: 6px 14px; font-size: 13px; width: auto; display: flex; align-items: center; height: 34px;"><i
+                            data-lucide="plus" style="width:14px;height:14px;margin-right:6px;"></i>Create New</button>
+                    <div style="width: 1px; height: 20px; background: rgba(0,0,0,0.1); margin: 0 4px; flex-shrink: 0;">
+                    </div>
+                    <button onclick="deleteCurrentWorkspace()" class="icon-btn danger-hover" style="margin-left: 8px;"
+                        title="Delete Active Database"><i data-lucide="trash-2"></i></button>
+                </div>
+            </header>
+
+            <div class="layout-grid">
+
+                <div class="main-col">
+                    <div class="section-title">
+                        <h3>Available Ingredients</h3>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="sleek-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="right">Total Price</th>
+                                    <th class="right">Volume</th>
+                                    <th>Unit</th>
+                                    <th>Cost / Unit</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="master-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                        <div id="master-empty" class="empty-message" style="display: none;">
+                            No ingredients yet. Add one from the side panel.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="side-col">
+                    <div class="form-box">
+                        <div class="summary-header">Add New Ingredient</div>
+                        <form id="master-form" class="vertical-form">
+                            <div class="field">
+                                <label>Name</label>
+                                <input type="text" id="m-name" class="sleek-input" placeholder="e.g. Canvas" required>
+                            </div>
+                            <div class="field">
+                                <label>Total Price (Rp)</label>
+                                <input type="text" id="m-harga" class="sleek-input" placeholder="0" required>
+                            </div>
+                            <div class="field-row">
+                                <div class="field">
+                                    <label>Volume</label>
+                                    <input type="number" id="m-volume" class="sleek-input" placeholder="0" required
+                                        step="any">
+                                </div>
+                                <div class="field">
+                                    <label>Unit</label>
+                                    <input type="text" id="m-unit" class="sleek-input" placeholder="pcs" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="black-btn">Save Ingredient</button>
+                        </form>
+                    </div>
+
+                    <!-- Import/Export Actions Box -->
+                    <div class="form-box" style="margin-top: 24px;">
+                        <div style="display: flex; gap: 12px; flex-direction: column;">
+                            <button onclick="exportDatabaseToExcel()" class="glass-btn subtle"
+                                style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i data-lucide="download" style="width: 16px; height: 16px;"></i> Export Database
+                            </button>
+                            <button onclick="document.getElementById('excel-upload').click()" class="glass-btn subtle"
+                                style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Import Database
+                            </button>
+                            <input type="file" id="excel-upload" accept=".xlsx, .xls" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="custom-modal" style="display: none;">
+        <div class="modal-box glass-panel">
+            <h3 id="modal-title">Title</h3>
+            <p id="modal-message">Message goes here</p>
+            <input type="text" id="modal-input" class="sleek-input"
+                style="display: none; margin-bottom: 24px; text-align: center; font-size: 16px; font-weight: 500;"
+                autocomplete="off">
+            <div class="modal-actions">
+                <button id="modal-cancel" class="glass-btn subtle">Cancel</button>
+                <button id="modal-confirm" class="glass-btn primary">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Init icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
