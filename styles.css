@@ -358,9 +358,9 @@ h1, h2, h3 { letter-spacing: -0.02em; }
     padding: 12px 16px;
 }
 
-.sleek-table th.right {
-    text-align: center;
-}
+.sleek-table th.right { text-align: right; }
+.sleek-table th.center { text-align: center; }
+.sleek-table th.left { text-align: left; }
 
 .sleek-table td {
     padding: 10px 16px;
@@ -369,6 +369,11 @@ h1, h2, h3 { letter-spacing: -0.02em; }
 
 .sleek-table tr:last-child td { border-bottom: none; }
 .sleek-table .right { text-align: right; }
+.sleek-table .center { text-align: center; }
+.sleek-table .left { text-align: left; }
+.sleek-table th.right { text-align: right; }
+.sleek-table th.center { text-align: center; }
+.sleek-table th.left { text-align: left; }
 .sleek-table .align-middle td { vertical-align: middle; }
 
 /* Inputs Inline */

@@ -385,9 +385,9 @@ function renderMaster() {
             if (editingMasterId === item.id) {
                 tr.innerHTML = `
                     <td data-label="Name"><input type="text" id="inline-name-${item.id}" value="${item.name}" class="table-input" required></td>
-                    <td data-label="Total Price" class="right"><input type="text" id="inline-price-${item.id}" value="${item.price.toLocaleString('id-ID')}" oninput="formatCurrencyInput(this)" class="table-input num" required></td>
-                    <td data-label="Volume" class="right"><input type="number" id="inline-vol-${item.id}" value="${item.volume}" step="any" class="table-input num" required></td>
-                    <td data-label="Unit"><input type="text" id="inline-unit-${item.id}" value="${item.unit}" class="table-input" required></td>
+                    <td data-label="Total Price" class="left"><input type="text" id="inline-price-${item.id}" value="${item.price.toLocaleString('id-ID')}" oninput="formatCurrencyInput(this)" class="table-input left" required></td>
+                    <td data-label="Volume" class="center"><input type="number" id="inline-vol-${item.id}" value="${item.volume}" step="any" class="table-input num center" required></td>
+                    <td data-label="Unit" class="center"><input type="text" id="inline-unit-${item.id}" value="${item.unit}" class="table-input center" required></td>
                     <td data-label="Cost / Unit" style="color:var(--fg-muted)">Auto</td>
                     <td data-label="Action" class="td-actions">
                         <button onclick="saveInlineMaster('${item.id}')" class="icon-btn"><i data-lucide="check"></i></button>
@@ -397,9 +397,9 @@ function renderMaster() {
             } else {
                 tr.innerHTML = `
                     <td data-label="Name">${item.name}</td>
-                    <td data-label="Total Price" class="right">Rp ${fmtMoney.format(item.price)}</td>
-                    <td data-label="Volume" class="right">${fmtDecimal.format(item.volume)}</td>
-                    <td data-label="Unit">${item.unit}</td>
+                    <td data-label="Total Price" class="left">Rp ${fmtMoney.format(item.price)}</td>
+                    <td data-label="Volume" class="center">${fmtDecimal.format(item.volume)}</td>
+                    <td data-label="Unit" class="center">${item.unit}</td>
                     <td data-label="Cost / Unit">Rp ${fmtDecimal.format(item.price / item.volume)} / ${item.unit}</td>
                     <td data-label="Action" class="td-actions">
                         <button onclick="editMasterRow('${item.id}')" class="icon-btn" title="Edit"><i data-lucide="pencil"></i></button>
@@ -695,12 +695,12 @@ function renderRecipeUI() {
                     <div class="dropdown-menu">${optionItemsHTML}</div>
                 </div>
             </td>
-            <td data-label="Master Vol" class="right" style="color:var(--fg-muted)">${master ? fmtDecimal.format(mVol) : '-'}</td>
-            <td data-label="Recipe Qty">
-                <input type="number" class="table-input num" onchange="updateRecipeRow('${row.id}', 'recipeVol', this.value)" 
+            <td data-label="Master Vol" class="center" style="color:var(--fg-muted)">${master ? fmtDecimal.format(mVol) : '-'}</td>
+            <td data-label="Recipe Qty" class="center">
+                <input type="number" class="table-input num center" onchange="updateRecipeRow('${row.id}', 'recipeVol', this.value)" 
                        value="${row.recipeVol}" step="any" min="0" ${!master ? 'disabled' : ''}>
             </td>
-            <td data-label="Unit" style="color:var(--fg-muted)">${master ? mUnit : '-'}</td>
+            <td data-label="Unit" class="center" style="color:var(--fg-muted)">${master ? mUnit : '-'}</td>
             <td data-label="Base Cost" class="right" style="color:var(--fg-muted)">${master ? 'Rp ' + fmtMoney.format(mPrice) : '-'}</td>
             <td data-label="Total" class="right"><strong>${master ? 'Rp ' + fmtMoney.format(rowTotal) : '-'}</strong></td>
             <td data-label="Action" class="td-actions">
