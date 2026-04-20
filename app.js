@@ -233,6 +233,63 @@ const workspaceTrigger = document.getElementById('workspace-trigger');
 const workspaceMenu = document.getElementById('workspace-menu');
 let editingMasterId = null;
 
+// ============== CUSTOM VALIDATION TOOLTIP ==============
+let activeTooltip = null;
+let isValidationRunning = false;
+
+function showValidationTooltip(input, message) {
+    if (activeTooltip) activeTooltip.remove();
+
+    const tooltip = document.createElement('div');
+    tooltip.className = 'validation-tooltip';
+    tooltip.innerHTML = `<i data-lucide="alert-circle" style="width:14px;height:14px;"></i> ${message}`;
+    document.body.appendChild(tooltip);
+    if (window.lucide) window.lucide.createIcons();
+
+    const rect = input.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+
+    tooltip.style.left = `${rect.left}px`;
+    tooltip.style.top = `${rect.top - tooltipRect.height - 12}px`;
+
+    // Ensure it doesn't go off screen
+    if (rect.top - tooltipRect.height - 12 < 0) {
+        tooltip.style.top = `${rect.bottom + 12}px`;
+        tooltip.classList.add('bottom');
+    }
+
+    setTimeout(() => tooltip.classList.add('visible'), 10);
+    activeTooltip = tooltip;
+
+    const hide = () => {
+        tooltip.classList.remove('visible');
+        setTimeout(() => tooltip.remove(), 200);
+        input.removeEventListener('input', hide);
+        input.removeEventListener('blur', hide);
+        if (activeTooltip === tooltip) activeTooltip = null;
+    };
+
+    input.addEventListener('input', hide);
+    input.addEventListener('blur', hide);
+}
+
+// Global intercept for native validation
+document.addEventListener('invalid', (e) => {
+    e.preventDefault();
+    
+    // Only show the tooltip for the FIRST invalid element discovered
+    if (!isValidationRunning) {
+        isValidationRunning = true;
+        showValidationTooltip(e.target, e.target.validationMessage);
+        
+        // Focus the first invalid element for better UX
+        e.target.focus();
+
+        // Reset the flag after the validation cycle finishes $(next tick)
+        setTimeout(() => { isValidationRunning = false; }, 100);
+    }
+}, true); // Use capture phase
+
 // Tab Nav
 tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
