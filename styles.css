@@ -551,6 +551,39 @@ input[type="number"] {
     .huge-title { font-size: 26px; }
     .huge-title-input { font-size: 28px; }
     
+    .tab-content { padding: 24px 0; }
+    
+    /* Fix Overlapping Nav on Mobile */
+    .top-nav {
+        height: auto;
+        padding: 12px 0;
+    }
+    .nav-container {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+    .logo {
+        justify-content: center;
+    }
+    .nav-tabs {
+        position: static;
+        transform: none;
+        order: 3;
+        width: fit-content;
+        margin: 0 auto;
+    }
+    .nav-actions {
+        order: 2;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: center;
+    }
+    .nav-actions .custom-dropdown {
+        min-width: 0 !important;
+        flex: 1;
+    }
+    
     /* Responsive Table to Cards */
     .sleek-table thead { display: none; }
     .sleek-table, .sleek-table tbody, .sleek-table tr, .sleek-table td { display: block; width: 100%; }

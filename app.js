@@ -666,7 +666,7 @@ function renderRecipeUI() {
             totalBiaya += rowTotal;
         }
 
-        let optionItemsHTML = `<div class="dropdown-item ${!row.masterId ? 'selected' : ''}" onclick="updateRecipeRow('${row.id}', 'masterId', '')"></div>`;
+        let optionItemsHTML = '';
         masterItems.forEach(m => {
             optionItemsHTML += `<div class="dropdown-item ${m.id === row.masterId ? 'selected' : ''}" onclick="updateRecipeRow('${row.id}', 'masterId', '${m.id}')">${m.name}</div>`;
         });
