@@ -45,10 +45,10 @@
                     </div>
                     <div class="dropdown-menu" id="product-menu"></div>
                 </div>
-                <button onclick="createNewProduct()" class="icon-btn" title="New Recipe"><i
-                        data-lucide="plus"></i></button>
-                <button onclick="deleteCurrentProduct()" class="icon-btn danger-hover" title="Delete Recipe"><i
-                        data-lucide="trash-2"></i></button>
+                <div class="action-btn-group" style="display: flex; gap: 12px; align-items: center;">
+                    <button onclick="createNewProduct()" class="icon-btn" title="New Recipe"><i data-lucide="plus"></i></button>
+                    <button onclick="deleteCurrentProduct()" class="icon-btn danger-hover" title="Delete Recipe"><i data-lucide="trash-2"></i></button>
+                </div>
             </div>
         </div>
     </nav>
@@ -124,15 +124,15 @@
                         </div>
                         <div class="breakdown-row faded">
                             <span>Profit (<span id="lbl-profit">50</span>%)</span>
-                            <span id="sum-profit">Rp 0</span>
+                            <span id="sum-profit" style="color: #34c759; font-weight: 500;">Rp 0</span>
                         </div>
                         <div class="breakdown-row faded">
                             <span>Operations (<span id="lbl-ops">30</span>%)</span>
-                            <span id="sum-ops">Rp 0</span>
+                            <span id="sum-ops" style="color: #ff3b30; font-weight: 500;">Rp 0</span>
                         </div>
                         <div class="breakdown-row faded">
                             <span>Tax (<span id="lbl-tax">10</span>%)</span>
-                            <span id="sum-tax">Rp 0</span>
+                            <span id="sum-tax" style="color: #ff3b30; font-weight: 500;">Rp 0</span>
                         </div>
 
                         <hr class="divider">
@@ -231,7 +231,7 @@
                     <!-- Import/Export Actions Box -->
                     <div class="form-box" style="margin-top: 24px;">
                         <div style="display: flex; gap: 12px; flex-direction: column;">
-                            <button onclick="exportDatabaseToExcel()" class="glass-btn subtle"
+                            <button onclick="exportDatabaseToExcel()" class="glass-btn subtle" id="btn-export"
                                 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <i data-lucide="download" style="width: 16px; height: 16px;"></i> Export Database
                             </button>

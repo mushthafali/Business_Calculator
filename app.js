@@ -247,7 +247,7 @@ tabBtns.forEach(btn => {
             if (btn.dataset.tab === 'tab-master') {
                 navActions.style.display = 'none';
             } else {
-                navActions.style.display = 'flex';
+                navActions.style.display = '';
             }
         }
 
@@ -362,6 +362,20 @@ window.deleteMasterRow = async function (id) {
 
 function renderMaster() {
     masterTableBody.innerHTML = '';
+    const btnExport = document.getElementById('btn-export');
+    if (btnExport) {
+        if (masterItems.length === 0) {
+            btnExport.disabled = true;
+            btnExport.style.opacity = '0.5';
+            btnExport.style.cursor = 'not-allowed';
+            btnExport.title = "Database is empty";
+        } else {
+            btnExport.disabled = false;
+            btnExport.style.opacity = '1';
+            btnExport.style.cursor = 'pointer';
+            btnExport.title = "Export Database";
+        }
+    }
     if (masterItems.length === 0) {
         masterEmpty.style.display = 'block';
     } else {
