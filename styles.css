@@ -559,22 +559,28 @@ input[type="number"] {
         padding: 12px 0;
     }
     .nav-container {
-        flex-direction: column;
-        gap: 16px;
-        align-items: stretch;
-    }
-    .logo {
-        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
     }
     .nav-tabs {
         position: static;
         transform: none;
-        order: 3;
-        width: fit-content;
-        margin: 0 auto;
+        order: 1;
+        width: auto;
+        margin: 0;
+    }
+    .logo {
+        order: 2;
+        width: auto;
+    }
+    .logo .custom-dropdown {
+        min-width: 0 !important;
     }
     .nav-actions {
-        order: 2;
+        order: 3;
         flex-wrap: wrap;
         width: 100%;
         justify-content: center;
